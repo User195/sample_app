@@ -1,0 +1,29 @@
+[33mcommit 5fbbb9d53530f476bdfa3fd6183ee7a5c7a459ed[m
+Author: User195 <User195@mail.ru>
+Date:   Sun Nov 24 18:56:38 2013 +0400
+
+    Add a full_title helper
+
+[33mcommit 9af1f4e0c587e4b7b1a7e5b5900de318b16a4c91[m
+Author: User195 <User195@mail.ru>
+Date:   Sat Nov 23 22:06:50 2013 +0400
+
+    Finish static pages
+
+[33mcommit ce4707f0e77313029bd19951f1b93bc8e422a302[m
+Author: User195 <User195@mail.ru>
+Date:   Sat Nov 23 19:16:05 2013 +0400
+
+    Add a StaticPage controller
+
+[33mcommit 86efc776926b5670c87e5e1c84e3ac579559c8a0[m
+Author: User195 <User195@mail.ru>
+Date:   Sat Nov 23 18:23:43 2013 +0400
+
+    Rename README
+
+[33mcommit 12c0383382687a49d0666bd9115b3b14faff6642[m
+Author: User195 <User195@mail.ru>
+Date:   Sat Nov 23 18:20:52 2013 +0400
+
+    Initial commit
