@@ -40,6 +40,7 @@ group :test do
 end
 
 group :production do
+  # PostgreSQL  для Heroku
   gem 'pg', '0.12.2'
 end
 
