@@ -14,10 +14,12 @@ class User < ActiveRecord::Base
   attr_accessible :email, :name, :password, :password_confirmation
   # authenticate
   has_secure_password
-  before_save { |user| user.email = email.downcase }
+
+  before_save { email.downcase! }
+  
   VALID_EMAIL_REGEX = /\A([^@\s]+)@((?:[-a-z0-9]+\.)+[a-z]{2,})\Z/i
 
-
+  # Полная валидация
   validates :name, presence: true,
   		length: { maximum: 50 }
   validates :password, presence: true, length: { minimum: 6 }
