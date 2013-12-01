@@ -1,8 +1,8 @@
 include ApplicationHelper
 
 def valid_signin(user)
-  fill_in "session_email",    with: user.email.upcase
-  fill_in "session_password", with: user.password
+  fill_in "email",    with: user.email.upcase
+  fill_in "password", with: user.password
   click_button "Sign in"
 end
 
