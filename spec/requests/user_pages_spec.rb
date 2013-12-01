@@ -7,7 +7,7 @@ describe "UserPages" do
 		before { visit signup_path }
 
 		it { should have_selector('h1', text: 'Sing Up') }
-		it { should have_selector('title', text: full_title('Sing Up'))}
+		it { should have_selector('title', text: full_title('Sign Up'))}
 
 	end
 
@@ -29,6 +29,14 @@ describe "UserPages" do
 			it "should not create a user" do
 				expect { click_button submit }.not_to change(User, :count)
 			end
+
+			describe "after submission" do
+				before { click_button submit }
+
+				it { should have_selector('title', text: 'Sign Up')}
+				it { should have_content('error') }
+			end
+
 		end
 
 		describe "with valid information" do
@@ -41,6 +49,21 @@ describe "UserPages" do
 			it "should create a user" do
 				expect { click_button submit }.to change(User, :count).by(1)
 			end
+
+			
+
+			describe "after saving the user" do
+				before { click_button submit }
+				let(:user) { User.find_by_email('example@email.com') }
+
+				it { should have_selector('title', text: user.name) }
+				it { should have_selector('div.alert.alert-success', text: 'Welcome') }
+				it { should have_link('Profile', href: user_path(user)) }
+				it { should have_link('Sign out', href: signout_path) }
+				it { should have_link('Settings')}
+				it { should_not have_link('Sign in', href: signin_path) }
+			end
+
 		end
 	end
 end

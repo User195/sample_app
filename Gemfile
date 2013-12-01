@@ -37,6 +37,10 @@ group :test do
   gem 'rb-notifu', '0.0.4'
   gem 'win32console', '1.3.0'
   gem 'factory_girl_rails', '4.1.0'
+
+  # Cucumber
+  gem 'cucumber-rails', '1.2.1', :require => false
+  gem 'database_cleaner', '0.7.0'
 end
 
 group :production do

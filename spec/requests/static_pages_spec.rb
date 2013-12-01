@@ -22,7 +22,6 @@ describe "Static pages" do
       click_link "Help"
       click_link "Sign in"
       click_link "sample app"
-
       click_link "Sign up now!"
    end
   end
