@@ -31,6 +31,18 @@ describe User do
   
   # Проверка на валидность 
   it { should be_valid }
+  # не админ
+  it { should_not be_admin }
+
+  describe "with admin attribute set to 'true'" do
+    before do
+      @user.save!
+      # метод toggle! для изменения атрибута admin от false к true.
+      @user.toggle!(:admin)
+    end
+    # подразумевает (через булеву конвенцию RSpec), что пользователь должен иметь булев метод admin?
+    it { should be_admin }
+  end
 
 
   describe "remember token" do
