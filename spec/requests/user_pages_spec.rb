@@ -6,7 +6,7 @@ describe "UserPages" do
 	describe "SingUp page" do
 		before { visit signup_path }
 
-		it { should have_selector('h1', text: 'Sing Up') }
+		it { should have_selector('h1', text: 'Sign Up') }
 		it { should have_selector('title', text: full_title('Sign Up'))}
 	end
 
@@ -85,15 +85,16 @@ describe "UserPages" do
 			it { should_not have_link('delete') }
 			describe "as un admin user" do
 				let(:admin) { FactoryGirl.create(:admin) }
+				let(:user) { FactoryGirl.create(:user) }
 				before do
 					valid_signin admin
 					visit users_path
 				end
-				it { should have_link('delete', href: user_path(User.first)) }
+				it { should_not have_link('delete', href: user_path(admin)) }
+				it { should have_link('delete', href: user_path(user)) }
 				it "should be able to delete another user" do
 					expect { click_link('delete') }.to change(User, :count).by(-1)
 				end
-				it { should_not have_link('delete', href: user_path(admin)) }
 			end
 		end
 	end

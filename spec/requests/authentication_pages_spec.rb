@@ -9,37 +9,49 @@ describe "Authentication" do
 
     it { should have_selector('h1',    text: 'Sign in') }
     it { should have_selector('title', text: 'Sign in') }
+    it { should_not have_link('Settings') }
+    it { should_not have_link('Profile') }
 
-	describe "with valid information" do
-		let(:user) { FactoryGirl.create(:user) }
-		before do
-			# valid_signin(user) method from /support/utilities.rb
-			valid_signin(user)
-		end
-		it { should have_selector('title', text: user.name) }
-		it { should have_link('Profile', href: user_path(user)) }
-		it { should have_link('Sign out', href: signout_path) }
-		it { should have_link('Settings', href: edit_user_path(user))}
-		it { should_not have_link('Sign in', href: signin_path) }
-    it { should have_link('Users', href: users_path)}
+  	describe "with valid information" do
+  		let(:user) { FactoryGirl.create(:user) }
+  		before do
+  			# valid_signin(user) method from /support/utilities.rb
+  			valid_signin(user)
+  		end
+  		it { should have_selector('title', text: user.name) }
+  		it { should have_link('Profile', href: user_path(user)) }
+  		it { should have_link('Sign out', href: signout_path) }
+  		it { should have_link('Settings', href: edit_user_path(user))}
+  		it { should_not have_link('Sign in', href: signin_path) }
+      it { should have_link('Users', href: users_path)}
 
-		describe "followed by signout" do
-			before { click_link "Sign out" }
-			it { should have_link('Sign in') }
-		end
+      describe "followed by sign up page" do
+        before { visit new_user_path }
+        it { should_not have_selector('h1', text: "Sign Up") }
+      end
 
-	end
+      describe "followed by create action" do
+        before { post users_path }
+        it { should_not have_selector('h1', text: "Sign Up") }
+      end
 
-	describe "with invalid information" do
-		before {click_button "Sign in" }
-		it { should have_selector('title', text: 'Sign in') }
-		it { should_not have_link('Settings')}
-		it { should have_error_message('Invalid') }
-		describe "after visiting another page" do
-			before { click_link "About" }
-			it { should_not have_selector('div.alert.alert-error') }
-		end
-	end
+  		describe "followed by signout" do
+  			before { click_link "Sign out" }
+  			it { should have_link('Sign in') }
+  		end
+  	end
+
+  	describe "with invalid information" do
+  		before {click_button "Sign in" }
+  		it { should have_selector('title', text: 'Sign in') }
+  		it { should_not have_link('Settings')}
+      it { should_not have_link('Profile')}
+  		it { should have_error_message('Invalid') }
+  		describe "after visiting another page" do
+  			before { click_link "About" }
+  			it { should_not have_selector('div.alert.alert-error') }
+  		end
+  	end
   end
 
   describe "Edit information" do
@@ -97,10 +109,19 @@ describe "Authentication" do
           fill_in "email", with: user.email
           fill_in "password", with: user.password
           click_button "Sign in"
-        end 
+        end
         describe "after signed in" do
           it "page.should have_selector" do
             should have_selector('title', text: full_title('Edit user'))
+          end
+          describe "when signing in again" do
+            before do
+              delete signout_path
+              valid_signin(user)
+            end
+            it "should render the default (profile) page" do
+              should have_selector('title', text: user.name)
+            end
           end
         end
       end
@@ -136,8 +157,9 @@ describe "Authentication" do
         valid_signin admin
         visit users_path
       end
-      describe "submitting a DELETE request to the admin#destroy action" do
+      describe "submitting a DELET request to the admin#destroy action" do
         before { delete user_path(admin) }
+        # it { should have_selector('h1', text: "Welcome")}
         specify { response.should redirect_to(root_path) }
       end
     end

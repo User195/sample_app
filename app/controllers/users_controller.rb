@@ -2,7 +2,8 @@ class UsersController < ApplicationController
   # ограничиваем воздействия предфильтра
   before_filter :signed_in_user, only: [:index, :edit, :update, :destroy]
   before_filter :correct_user, only: [:edit, :update]
-  before_filter :admin_user, only: :destroy
+  before_filter :admin_user, only: [:destroy]
+  before_filter :signed_in_user1, only: [:create, :new]
   def index
     @users = User.paginate(page: params[:page])
   end
@@ -37,13 +38,28 @@ class UsersController < ApplicationController
     end
   end
   def destroy
-    User.find(params[:id]).destroy
-    flash[:success] = "User destroyed."
-    redirect_to users_url
+    # User.find(params[:id]).destroy
+    # flash[:success] = "User destroyed."
+    # redirect_to users_url
+    
+    # Если пытаются удалить пользователя со значением поля admin = true
+    # То проиходит редирек в корень
+    if User.find(params[:id]).admin?
+      redirect_to(root_path)
+    else
+      User.find(params[:id]).destroy
+      flash[:success] = "User destroyed."
+      redirect_to users_url
+    end
   end
 
   # Прдефильтр, если sign_in? false, то выскакивает notice и редирект
   private
+    def signed_in_user1
+      if signed_in?
+        redirect_to root_path
+      end
+    end
     def signed_in_user
       # unless (если не) - антипод if else
       # если signed_in? false, то выполняется дейтсвие
