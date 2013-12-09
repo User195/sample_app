@@ -10,4 +10,10 @@ FactoryGirl.define do
     	admin true
     end
   end
+  # Здесь мы сообщаем Factory Girl о том,
+  # что микросообщения связаны с пользователем просто включив пользователя в определение фабрики:
+  factory :micropost do
+    content "Lorem ipsum"
+    user
+  end
 end

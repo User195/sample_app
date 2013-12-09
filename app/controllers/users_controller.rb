@@ -3,15 +3,18 @@ class UsersController < ApplicationController
   before_filter :signed_in_user, only: [:index, :edit, :update, :destroy]
   before_filter :correct_user, only: [:edit, :update]
   before_filter :admin_user, only: [:destroy]
-  before_filter :signed_in_user1, only: [:create, :new]
+  before_filter :signed_in_user_for_new_and_create, only: [:create, :new]
   def index
+    # пагинация списка пользователей
     @users = User.paginate(page: params[:page])
   end
   def new
   	@user = User.new
   end
   def show
-  	@user = User.find(params[:id])  	
+  	@user = User.find(params[:id])
+    # Пагинация списка сообщений
+    @microposts = @user.microposts.paginate(page: params[:page])
   end
   def create
   	@user = User.new(params[:user])
@@ -55,19 +58,12 @@ class UsersController < ApplicationController
 
   # Прдефильтр, если sign_in? false, то выскакивает notice и редирект
   private
-    def signed_in_user1
+    def signed_in_user_for_new_and_create
       if signed_in?
         redirect_to root_path
       end
     end
-    def signed_in_user
-      # unless (если не) - антипод if else
-      # если signed_in? false, то выполняется дейтсвие
-      unless signed_in?
-        store_location
-        redirect_to signin_url, notice: "Please sign in."
-      end
-    end
+    
     # проверка что пользователь требует свою страницу, а не чужую
     def correct_user
       @user = User.find(params[:id])

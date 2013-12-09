@@ -33,4 +33,13 @@ module SessionsHelper
 		# очищает session[:redirect_to]
 		session.delete(:return_to)
 	end
+
+	def signed_in_user
+      # unless (если не) - антипод if else
+      # если signed_in? false, то выполняется дейтсвие
+      unless signed_in?
+        store_location
+        redirect_to signin_url, notice: "Please sign in."
+      end
+    end
 end
