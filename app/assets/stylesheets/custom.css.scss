@@ -154,6 +154,8 @@ input, textarea, select .indeditable-input {
   padding: 10px;
   margin-bottom: 15px;
   @include box_sizing;
+  //
+  resize: none;
 }
 
 input {
@@ -195,6 +197,9 @@ input {
   li {
     padding: 10px 0;
     border-top: 1px solid #e8e8e8;
+    .gravatar {
+      margin-bottom: 20px;
+    }
   }
 }
 .content {

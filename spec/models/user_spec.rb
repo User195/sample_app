@@ -91,7 +91,7 @@ describe User do
   end
 
   describe "When email format is invalid" do
-  	it "sould be invalid" do
+  	it "should be invalid" do
   		addresses = %w[user@foo,com user_at_foo.org example.user@foo. 
   			foo@bar_baz.com foo@bar+baz.com]
 		addresses.each do |invalid_address|
@@ -173,7 +173,7 @@ describe User do
         FactoryGirl.create(:micropost, user: FactoryGirl.create(:user))
       end
       # include - метод, который проверяет что элемент входит в массив
-      its(:feed) { should include(newer_micropost) }
+      its(:feed) { should include(older_micropost) }
       its(:feed) { should include(newer_micropost) }
       its(:feed) { should_not include(unfollowed_post) }
     end

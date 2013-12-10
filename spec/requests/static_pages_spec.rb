@@ -39,8 +39,24 @@ describe "Static pages" do
         page.should have_selector("li##{item.id}", text: item.content)
       end
     end
-   end
+    describe "feed microposts" do
+      # проверка количества микропостов
+      it { should have_content(user.microposts.count) }
 
+      describe "pagination" do
+      it { should have_selector('div.pagination') }
+
+      before(:all) { 30.times { FactoryGirl.create(:micropost, user: user, content: "test") } }
+      after(:all) { User.delete_all }
+      
+      it "should each list user" do
+        User.paginate(page: 1).each do |user|
+          page.should have_selector('li', text: user.name)
+        end
+      end
+    end
+    end
+   end
   end
 
   describe "Help page" do

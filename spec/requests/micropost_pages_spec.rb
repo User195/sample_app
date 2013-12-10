@@ -12,6 +12,7 @@ describe "Micropost pages" do
   		
   		it "should not create a micropost" do
   			expect { click_button "Post" }.not_to change(Micropost, :count)
+  			should have_content('error')
   		end
 
   		describe "error messages" do
@@ -29,7 +30,7 @@ describe "Micropost pages" do
   		end
   	end
   end
-  describe "micropost destrucation" do
+  describe "micropost destruction" do
   	before { FactoryGirl.create(:micropost, user: user) }
   	describe "as correct user" do
   		before { visit root_path }
