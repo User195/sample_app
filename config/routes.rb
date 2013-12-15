@@ -1,8 +1,16 @@
 SampleApp::Application.routes.draw do
 
-  resources :users
-  resources :sessions,   only: [:new, :create, :destroy]
-  resources :microposts, only: [:create, :destroy]
+  # REST CRUD пути
+  resources :users do
+    # метод member означает, что маршруты отвечают на URL, содержащие id пользователя
+    member do
+      # /users/1/following и /users/1/followers
+      get :following, :followers
+    end
+  end
+  resources :sessions,      only: [:create, :destroy, :new]
+  resources :microposts,    only: [:create, :destroy]
+  resources :relationships, only: [:create, :destroy]
 
   match '/signup', to: 'users#new'
   match '/signin', to: 'sessions#new'

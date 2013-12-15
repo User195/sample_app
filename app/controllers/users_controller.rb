@@ -1,6 +1,6 @@
 class UsersController < ApplicationController
   # ограничиваем воздействия предфильтра
-  before_filter :signed_in_user, only: [:index, :edit, :update, :destroy]
+  before_filter :signed_in_user, only: [:index, :edit, :update, :destroy, :followers, :following]
   before_filter :correct_user, only: [:edit, :update]
   before_filter :admin_user, only: [:destroy]
   before_filter :signed_in_user_for_new_and_create, only: [:create, :new]
@@ -11,11 +11,13 @@ class UsersController < ApplicationController
   def new
   	@user = User.new
   end
+  # GET READ
   def show
   	@user = User.find(params[:id])
     # Пагинация списка сообщений
     @microposts = @user.microposts.paginate(page: params[:page])
   end
+  # POST CREATE
   def create
   	@user = User.new(params[:user])
     if @user.save
@@ -29,6 +31,7 @@ class UsersController < ApplicationController
   def edit
     # @user = User.find(params[:id])
   end
+  # PUT(POST) UPDATE
   def update
     # @user = User.find(params[:id])
     if @user.update_attributes(params[:user])
@@ -40,6 +43,7 @@ class UsersController < ApplicationController
       render 'edit'
     end
   end
+  # DELETE(POST) DESTROY
   def destroy
     # User.find(params[:id]).destroy
     # flash[:success] = "User destroyed."
@@ -55,6 +59,22 @@ class UsersController < ApplicationController
       redirect_to users_url
     end
   end
+
+  def following
+    @title = "Following"
+    @user  = User.find(params[:id])
+    @users = @user.followed_users.paginate(page: params[:page])
+    render 'show_follow'
+  end
+
+  def followers
+    @title = "Followers"
+    @user  = User.find(params[:id])
+    @users = @user.followers.paginate(page: params[:page])
+    render 'show_follow'
+  end
+
+  
 
   # Прдефильтр, если sign_in? false, то выскакивает notice и редирект
   private

@@ -23,40 +23,52 @@ describe "Static pages" do
       click_link "Sign in"
       click_link "sample app"
       click_link "Sign up now!"
-   end
-
-   describe "for signed-in users" do
-    let(:user) { FactoryGirl.create(:user) }
-    before do
-      FactoryGirl.create(:micropost, user: user, content: "Lorem Ipsum")
-      FactoryGirl.create(:micropost, user: user, content: "Dolor sit amet")
-      valid_signin user
-      visit root_path
     end
 
-    it "should render the user's feed" do
-      user.feed.each do |item| 
-        page.should have_selector("li##{item.id}", text: item.content)
+    describe "for signed-in users" do
+      let(:user) { FactoryGirl.create(:user) }
+      before do
+        FactoryGirl.create(:micropost, user: user, content: "Lorem Ipsum")
+        FactoryGirl.create(:micropost, user: user, content: "Dolor sit amet")
+        valid_signin user
+        visit root_path
       end
-    end
-    describe "feed microposts" do
-      # проверка количества микропостов
-      it { should have_content(user.microposts.count) }
 
-      describe "pagination" do
-      it { should have_selector('div.pagination') }
-
-      before(:all) { 30.times { FactoryGirl.create(:micropost, user: user, content: "test") } }
-      after(:all) { User.delete_all }
-      
-      it "should each list user" do
-        User.paginate(page: 1).each do |user|
-          page.should have_selector('li', text: user.name)
+      it "should render the user's feed" do
+        user.feed.each do |item| 
+          page.should have_selector("li##{item.id}", text: item.content)
         end
       end
+
+      describe "feed microposts" do
+        # проверка количества микропостов
+        it { should have_content(user.microposts.count) }
+
+        describe "pagination" do
+          it { should have_selector('div.pagination') }
+
+          before(:all) { 30.times { FactoryGirl.create(:micropost, user: user, content: "test") } }
+          after(:all) { User.delete_all }
+          
+          it "should each list user" do
+            User.paginate(page: 1).each do |user|
+              page.should have_selector('li', text: user.name)
+            end
+          end
+        end
+      end
+
+      describe "follower/followed counts" do
+        let(:other_user) { FactoryGirl.create(:user) }
+        before do
+          other_user.follow!(user)
+          visit root_path
+        end
+        it { should have_link("0 following", href: following_user_path(user)) }
+        it { should have_link("1 followers", href: followers_user_path(user)) }
+      end
     end
-    end
-   end
+
   end
 
   describe "Help page" do
